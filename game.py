@@ -18,13 +18,13 @@ class Field:
         self.field = np.zeros((col_blocks, row_blocks), int)
         # self.field = [[0].copy() * row_blocks].copy() * col_blocks
 
-        self.field[1][1] = 1
+        # self.field[1][1] = 1
 
         self.gate_width = 10
 
         self.padding = 2
 
-        self.next_gate = False
+        self.next_gate = True
 
         self.layers_per_gate = 2
 
@@ -38,7 +38,7 @@ class Field:
         gate_left_start = random.randrange(self.padding, self.row_width - self.padding - self.gate_width)
 
         for i in range(gate_left_start, gate_left_start + self.gate_width):
-            gate[i] = 1
+            gate[i] = 0
 
         return gate
 
@@ -46,9 +46,18 @@ class Field:
         self.gate_width = max(2, self.gate_width - 1)
 
     def update(self):
+        if self.field[19][0] == 1 and not self.next_gate:
+            self.next_gate = True
+            self.gate = self.generate_gate()
         self.field = np.delete(self.field, 19, 0)
-        # if ()
-        self.field = np.insert(self.field, 0, np.zeros(self.row_width, int), 0)
+        if self.next_gate:
+            self.field = np.insert(self.field, 0, self.gate, 0)
+            self.layers_left -= 1
+            if self.layers_left == 0:
+                self.next_gate = False
+                self.layers_left = self. layers_per_gate
+        else:
+            self.field = np.insert(self.field, 0, np.zeros(self.row_width, int), 0)
 
     def __repr__(self):
         return " " + self.field.__repr__().replace("],", "],\n ")
