@@ -3,6 +3,7 @@ import numpy as np
 import time
 import random
 
+
 class Field:
 
     def __init__(self, row_blocks, col_blocks, block_width, block_height):
@@ -45,17 +46,19 @@ class Field:
     def shorten_gate(self):
         self.gate_width = max(2, self.gate_width - 1)
 
-    def update(self):
+    def update(self, score_callback):
         if self.field[19][0] == 1 and not self.next_gate:
             self.next_gate = True
             self.gate = self.generate_gate()
+            score_callback()
+
         self.field = np.delete(self.field, 19, 0)
         if self.next_gate:
             self.field = np.insert(self.field, 0, self.gate, 0)
             self.layers_left -= 1
             if self.layers_left == 0:
                 self.next_gate = False
-                self.layers_left = self. layers_per_gate
+                self.layers_left = self.layers_per_gate
         else:
             self.field = np.insert(self.field, 0, np.zeros(self.row_width, int), 0)
 
@@ -81,11 +84,24 @@ class Game:
 
         self.player = [7, 16]
 
+        self.difficulty = 0
+        self.difficulty_jump = 100
+
+        self.score = 0
+
         self.start_game_loop()
+
+    def increase_score(self):
+        self.score += 1
 
     def start_game_loop(self):
         frame_count = 0
         while not self.game_over:
+
+            if frame_count % self.difficulty_jump == 0:
+                self.difficulty += 1
+                self.field.shorten_gate()
+
             events = pygame.event.get()
             action = 0
 
@@ -100,7 +116,7 @@ class Game:
             self.player[0] += action
 
             if frame_count % 4 == 0:
-                self.field.update()
+                self.field.update(self.increase_score)
             self.render()
             frame_count += 1
         time.sleep(3)
@@ -133,7 +149,6 @@ class Game:
         for row in range(len(field)):
             for block in range(len(field[row])):
                 rectangle = pygame.Rect(block * self.block_width, row * self.block_height, self.block_width, self.block_height)
-
                 pygame.draw.rect(self.window, self.get_color(field[row][block]), rectangle)
 
         self.clock.tick(24)
