@@ -3,6 +3,8 @@ import numpy as np
 import time
 import random
 
+pygame.init()
+
 
 class Field:
 
@@ -115,7 +117,7 @@ class Game:
 
             self.player[0] += action
 
-            if frame_count % 4 == 0:
+            if frame_count % 3 == 0:
                 self.field.update(self.increase_score)
             self.render()
             frame_count += 1
@@ -152,7 +154,10 @@ class Game:
                 pygame.draw.rect(self.window, self.get_color(field[row][block]), rectangle)
 
         self.clock.tick(24)
+        font = pygame.font.SysFont(None, 24)
+        img = font.render(f"{self.score}", True, (0, 255, 0))
+        self.window.blit(img, (20, 20))
         pygame.display.update()
 
-
-Game()
+if __name__ == '__main__':
+    Game()

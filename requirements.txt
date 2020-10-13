@@ -1,0 +1,11 @@
+tensorflow
+
+tf_agents
+
+opencv-python
+
+pygame
+
+imageio
+
+matplotlib
