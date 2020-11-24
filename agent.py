@@ -281,11 +281,9 @@ def compute_avg_return(environment, policy, num_episodes=10):
 
 
 if __name__ == '__main__':
-    cv2.imshow('frame', np.zeros((3, 3, 3)))
     environment = Game()
     utils.validate_py_environment(environment, episodes=5)
 
-    print("yea")
 
     train_env = tf_py_environment.TFPyEnvironment(Game())
     eval_env = tf_py_environment.TFPyEnvironment(Game())

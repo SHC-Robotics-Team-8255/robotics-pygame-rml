@@ -39,11 +39,9 @@ class Field:
         return gate
 
     def update(self):
-        return_true = False
         if self.field[19][0] == 1 and not self.next_gate:
             self.next_gate = True
             self.gate = self.generate_gate()
-            return_true = True
 
         self.field = np.delete(self.field, 19, 0)
         if self.next_gate:
@@ -54,8 +52,6 @@ class Field:
                 self.layers_left = self.layers_per_gate
         else:
             self.field = np.insert(self.field, 0, np.zeros(self.row_width, int), 0)
-
-        return return_true
 
     def __repr__(self):
         return " " + self.field.__repr__() # .replace("],", "],\n ")
