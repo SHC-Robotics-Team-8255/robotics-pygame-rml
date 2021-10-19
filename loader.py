@@ -5,7 +5,7 @@ from tf_agents.environments import tf_py_environment
 
 eval_env = tf_py_environment.TFPyEnvironment(agent.Game(limit=False))
 
-saved_policy = tf.compat.v2.saved_model.load('policies/epoch_run/policy_40000')
+saved_policy = tf.compat.v2.saved_model.load('perfect_policies/policy_5_width_max_score')
 time_step = eval_env.reset()
 while True:
     policy_step = saved_policy.action(time_step)
